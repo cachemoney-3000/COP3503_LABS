@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class lab1 {
-    static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         int numInputs;
@@ -17,16 +17,17 @@ public class lab1 {
     private static void median(int numInputs){
         int data;
         double median;
+        int input;
 
-        // Queue that stores the smaller_half half
-        PriorityQueue<Integer> smaller_half = new PriorityQueue<>(Collections.reverseOrder());
-        // Queue that stores the greater_half half
-        PriorityQueue<Integer> greater_half = new PriorityQueue<>();
+        // Queue that stores the smaller half
+        PriorityQueue<Integer> smaller = new PriorityQueue<>(Collections.reverseOrder());
+        // Queue that stores the greater half
+        PriorityQueue<Integer> greater = new PriorityQueue<>();
 
         // Stores the first element
         data = scanner.nextInt();
         // Add the first element into the queue
-        smaller_half.add(data);
+        smaller.add(data);
         // Make the first element the median
         median = data;
         // Prints out the first median
@@ -34,65 +35,64 @@ public class lab1 {
 
         // Scans and handles the next inputs
         for(int i = 1; i < numInputs; i++){
-            int input;
             input = scanner.nextInt();
 
             // First case where the smaller half of the queue has greater value than its other half
-            if(smaller_half.size() > greater_half.size()){
-                median = first_case(input, median, smaller_half, greater_half);
+            if(smaller.size() > greater.size()){
+                median = first_case(input, median, smaller, greater);
             }
             // Second case where the smaller half and the greater half of the queue has the same size
-            else if(smaller_half.size() == greater_half.size()){
-                median = second_case(input, median, smaller_half, greater_half);
+            else if(smaller.size() == greater.size()){
+               median = second_case(input, median, smaller, greater);
             }
             // Third case where the greater half of the queue has greater value than its other half
             else{
-                median = third_case(input, median, smaller_half, greater_half);
+               median = third_case(input, median, smaller, greater);
             }
             // Prints out the nth median
             System.out.println(median);
         }
     }
 
-    private static double first_case(int input, double median, PriorityQueue<Integer> smaller_half ,PriorityQueue<Integer> greater_half){
+    private static double first_case(int input, double median, PriorityQueue<Integer> smaller ,PriorityQueue<Integer> greater){
         // Rearrange both queue and make it balance then add the new input
         if(input < median){
-            greater_half.add(smaller_half.remove());
-            smaller_half.add(input);
+            greater.add(smaller.remove());
+            smaller.add(input);
         }
         else
-            greater_half.add(input);
+            greater.add(input);
 
         // Find the median
-        median = (double) (smaller_half.peek() + greater_half.peek()) / 2;
+        median = (double) (smaller.peek() + greater.peek()) / 2;
         return median;
     }
 
-    private static double second_case(int input, double median, PriorityQueue<Integer> smaller_half ,PriorityQueue<Integer> greater_half){
+    private static double second_case(int input, double median, PriorityQueue<Integer> smaller ,PriorityQueue<Integer> greater){
         // Check where to put the new input then get the new median
         if(input < median){
-            smaller_half.add(input);
-            median = (double) smaller_half.peek();
+            smaller.add(input);
+            median = (double) smaller.peek();
         }
         else{
-            greater_half.add(input);
-            median = (double) greater_half.peek();
+            greater.add(input);
+            median = (double) greater.peek();
         }
 
         return median;
     }
 
-    private static double third_case(int input, double median, PriorityQueue<Integer> smaller_half ,PriorityQueue<Integer> greater_half){
+    private static double third_case(int input, double median, PriorityQueue<Integer> smaller ,PriorityQueue<Integer> greater){
         // Rearrange both queue and make it balance then add the new input
         if(input > median){
-            smaller_half.add(smaller_half.remove());
-            greater_half.add(input);
+            smaller.add(greater.remove());
+            greater.add(input);
         }
         else
-            smaller_half.add(input);
+            smaller.add(input);
 
         // Find the median
-        median = (double) (smaller_half.peek() + greater_half.peek()) / 2;
+        median = (double) (smaller.peek() + greater.peek()) / 2;
         return median;
     }
 }
